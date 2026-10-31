@@ -1,0 +1,22 @@
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+email-validator
+python-dotenv
+sqlmodel
+psycopg2-binary
+passlib[bcrypt]
+bcrypt==4.0.1
+python-jose[cryptography]
+python-multipart
+numpy
+trimesh
+scikit-image
+opencv-python-headless
+manifold3d
+scipy
+networkx
+pillow
+imageio
+-e ../OrthoCAD_Repo

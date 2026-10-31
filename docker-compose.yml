@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: dragonforge_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: dbname
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d dbname"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ..
+      dockerfile: 3d_generator_project/Dockerfile
+    container_name: dragonforge_api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+psycopg2://user:password@db:5432/dbname
+      DEBUG_MODE: "True"
+      APP_NAME: "DragonForge 3D Model Generator API"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./app:/workspace/3d_generator_project/app
+      - ../OrthoCAD_Repo/src:/workspace/OrthoCAD_Repo/src
+
+volumes:
+  postgres_data:
